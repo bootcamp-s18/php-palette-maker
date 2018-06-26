@@ -52,7 +52,15 @@
 				<div id="collapse<?php echo $palette[id]; ?>" class="collapse" data-parent="#palettes">
 					<div class="card-body">
 
-<?php foreach (getPaletteColors($palette['id']) as $color) { echo displayColor($color['id'], $color['name'], $color['hex']); } ?>
+<?php 
+
+	foreach (getPaletteColors($palette['id']) as $color) { 
+		echo displayColor($color['id'], $color['name'], $color['hex']); 
+	} 
+
+	echo getAddColorLinks($palette['id']);
+?>
+
 
 	        		</div>
 	        	</div>
@@ -66,7 +74,7 @@
 
 		<!-- List of colors -->
 
-		<div class="col-sm-12 col-md-6">
+		<div class="col-sm-12 col-md-6 mt-sm-3 mt-md-0">
 
 			<h4>Colors</h4>
 

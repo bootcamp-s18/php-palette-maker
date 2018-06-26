@@ -48,6 +48,55 @@ ORDER BY color.name;';
 
 	}
 
+	function getAddColorLinks($palette_id) {
+
+		$output = '
+			<div class="card rounded-0">
+							<div class="card-header row" id="color' . $id . '" style="margin: 0 !important; padding: 0 !important; background-color: #FFFFFF;">
+
+			<div class="col m-auto">
+			<div class="dropright">
+			  <a class="btn dropdown-toggle rounded-0" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+			    Add a Color
+			  </a>
+
+			  <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">';
+
+		foreach (getUnlinkedColors($palette_id) as $unlinked) {
+
+    		$output .= '<a class="dropdown-item" href="#">' . $unlinked['name'] . '</a>';
+
+    	}
+
+
+		$output .= '
+		  </div>
+		</div>
+		</div>
+
+						</div>
+					</div>';
+
+		return $output;
+
+	}
+
+	function getUnlinkedColors($palette_id) {
+
+		$sql = 'SELECT id, name, hex FROM color
+WHERE color.id NOT IN (SELECT color_id FROM color_palette WHERE palette_id = ' . $palette_id . ')
+ORDER BY name;';
+
+		$request = pg_query(getDb(), $sql);
+
+		$results = pg_fetch_all($request);
+
+		return $results;
+
+	}
+
+
+
 	function addColorToPalette($color_id) {
 
 
