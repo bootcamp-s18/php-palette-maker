@@ -5,36 +5,36 @@
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
 </head>
 <body class="container">
-	<h1>PHP Palette Maker</h1>
+	<h1 class="mt-3">PHP Palette Maker</h1>
 
 <div class="mt-5"></div>
 
 <!-- New color form -->
 <form class="form-inline" method="get" action="">
 	<label class="sr-only" for="colorName">Color Name</label>
-	<input type="text" class="form-control mb-2 mr-sm-2 mb-sm-0" id="colorName" name="colorName" placeholder="The deep dark void...">
+	<input type="text" class="rounded-0 form-control mb-2 mr-sm-2 mb-sm-0" id="colorName" name="colorName" placeholder="The deep dark void...">
 
 	<label class="sr-only" for="hexCode">Hex Code</label>
 	<div class="input-group mb-2 mr-sm-2 mb-sm-0">
 		<div class="input-group-prepend">
-			<div class="input-group-text">#</div>
+			<div class="rounded-0 input-group-text">#</div>
 		</div>
-		<input type="text" class="form-control" id="hexCode" placeholder="a1b2c3" maxlength="6" size="6">
+		<input type="text" class="rounded-0form-control" id="hexCode" placeholder="a1b2c3" maxlength="6" size="6">
 	</div>
 
-	<button type="submit" class="btn btn-secondary">Add Color</button>
+	<button type="submit" class="btn btn-secondary rounded-0">Add Color</button>
 </form>
 
 
-<div class="mt-5"></div>
+<div class="mt-3"></div>
 
 
 <!-- New palette form -->
 <form class="form-inline" method="get" action="">
 	<label class="sr-only" for="paletteName">Palette Name</label>
-	<input type="text" class="form-control mb-2 mr-sm-2 mb-sm-0" id="paletteName" name="paletteName" placeholder="The most beautiful...">
+	<input type="text" class="rounded-0 form-control mb-2 mr-sm-2 mb-sm-0" id="paletteName" name="paletteName" placeholder="The most beautiful...">
 
-	<button type="submit" class="btn btn-secondary">Add Palette</button>
+	<button type="submit" class="btn btn-secondary rounded-0">Add Palette</button>
 </form>
 
 
@@ -68,8 +68,8 @@
 
 ?>
 
-		<div class="card">
-			<div class="card-header" id="palette<?php echo $palette[id]; ?>">
+		<div class="card rounded-0">
+			<div class="card-header" id="palette<?php echo $palette[id]; ?>" style="margin: 0 !important; padding: 0 !important;">
 				<h5 class="mb-0">
 					<button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse<?php echo $palette[id]; ?>"><?php echo $palette[name]; ?></button>
 				</h5>
