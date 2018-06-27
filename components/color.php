@@ -39,12 +39,9 @@
 		return '
 			<div class="card rounded-0">
 				<div class="card-header row" id="color' . $id . '" style="margin: 0 !important; padding: 0 !important; background-color: #FFFFFF;">
-					<h5 class="mb-0 col">
-						<button class="btn">' . $name . '</button>
-					</h5>
+					<div class="col m-auto"><strong>' . $name . '</strong> <span class="text-secondary">#' . $hex . '</span></div>
 					<div class="col m-auto" style="border: 1px solid #000; height: 30px; width: 60px; background-color: #' . $hex . ';"></div>
-					<div class="col text-right">
-						#' . $hex . '
+					<div class="col col-sm-auto text-right">
 						<button class="btn">X</button>
 					</div>
 				</div>
