@@ -17,10 +17,17 @@
 
 	require_once('database.php');
 
+	if (isset($_GET['colorName']) && isset($_GET['hexCode'])) {
+		$safeName = htmlentities($_GET['colorName'], ENT_QUOTES);
+		$safeHex = htmlentities($_GET['hexCode'], ENT_QUOTES);
+		addColor($safeName, $safeHex);
+	}
+
 	function getColors() {
-		$db = getDb();
-		$request = pg_query($db, "select id, name, hex from color order by name");
+
+		$request = pg_query(getDb(), "select id, name, hex from color order by name");
 		return $results = pg_fetch_all($request);		
+	
 	}
 
 	function displayColor($id, $name, $hex) {
@@ -42,6 +49,19 @@
 
 	function addColor($name, $hex) {
 
+		global $error;
+		global $info;
+
+		$sql = "INSERT INTO color (name, hex) VALUES ('" . $name . "', '" . $hex . "');";
+
+		$request = pg_query(getDb(), $sql);
+
+		if ($request) {
+			$info = "<strong>" . $name . "</strong> was added to the color list.";
+		}
+		else {
+			$error = "Could not add <strong>" . $name . "</strong> to the color list.";
+		}
 
 	}
 
