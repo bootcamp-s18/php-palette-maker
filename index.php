@@ -22,7 +22,7 @@
 </head>
 <body class="container">
 
-	<p><a href="/">Clear params</a></p>
+	<p><a href="/?">Clear params</a></p>
 
 	<h1 class="mt-3">PHP Palette Maker</h1>
 
@@ -53,9 +53,15 @@
 
 			<div class="card rounded-0">
 				<div class="card-header" id="palette<?php echo $palette[id]; ?>" style="margin: 0 !important; padding: 0 !important;">
-					<h5 class="mb-0">
+					<h5 class="mb-0 float-left">
 						<button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse<?php echo $palette[id]; ?>"><?php echo $palette[name]; ?></button>
 					</h5>
+					<div class="float-right col col-sm-auto text-right">
+						<form method="post" action="">
+							<button class="btn text-danger bg-transparent" type="submit"><i class="fas fa-trash-alt"></i></button>
+							<input type="hidden" name="deletePaletteId" value="<?=$palette['id']?>">
+						</form>
+					</div>
 				</div>
 				<div id="collapse<?php echo $palette[id]; ?>" class="collapse" data-parent="#palettes">
 					<div class="card-body">

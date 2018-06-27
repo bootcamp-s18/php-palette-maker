@@ -6,6 +6,10 @@
 		$safeName = htmlentities($_GET['paletteName'], ENT_QUOTES);
 		addPalette($safeName);
 	}
+	elseif (isset($_POST['deletePaletteId'])) {
+		$safePaletteId = htmlentities($_POST['deletePaletteId'], ENT_QUOTES);
+		deletePalette($safePaletteId);
+	}
 
 	function paletteForm() {
 
@@ -112,6 +116,35 @@ ORDER BY name;';
 
 	function deletePalette($palette_id) {
 
+		$name = getPaletteName($palette_id);
+
+		$sql1 = "DELETE FROM color_palette WHERE palette_id = " . $palette_id;
+		$sql2 = "DELETE FROM palette WHERE id = " . $palette_id;
+
+		$db = getDb(); // So that we can check pg_last_error later
+
+		$request1 = pg_query($db, $sql1);
+
+		if ($request1) {
+			// Yay! Let's continue.
+		}
+		else {
+			$_SESSION['error'] = cleanUpErrorMessage(pg_last_error($db)) . "...1";
+			return;			
+		}		
+
+		$request2 = pg_query($db, $sql2);
+
+		if ($request2) {
+			$_SESSION['info'] = "<strong>" . $name . "</strong> was removed from the palette list.";
+			$newUrl = removeParams(assembleCurrentUrl(), []);
+			header('Location: '.$newUrl);
+			exit();
+
+		}
+		else {
+			$_SESSION['error'] = cleanUpErrorMessage(pg_last_error($db)) . "...2";
+		}		
 
 	}
 

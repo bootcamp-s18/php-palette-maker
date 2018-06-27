@@ -131,21 +131,6 @@
 
 	}
 
-	function getColorName($color_id) {
-
-		$request = pg_query(getDb(), "SELECT name FROM color WHERE id = " . $color_id);
-		return pg_fetch_row($request)[0];
-
-	}
-
-	function getPaletteName($palette_id) {
-
-		$request = pg_query(getDb(), "SELECT name FROM palette WHERE id = " . $palette_id);
-		return pg_fetch_row($request)[0];
-
-	}
-
-
 	function deleteColor($color_id) {
 
 		$name = getColorName($color_id);
