@@ -172,7 +172,7 @@
 
 		$name = getColorName($color_id);
 
-		$sql = "DELETE FROM color_palette WHERE color_id = " . $color_id . ' and palette_id = kjflsdkfls' . $palette_id;
+		$sql = "DELETE FROM color_palette WHERE color_id = " . $color_id . ' and palette_id = ' . $palette_id;
 
 		$db = getDb(); // So that we can check pg_last_error later
 
