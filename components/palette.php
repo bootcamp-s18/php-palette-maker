@@ -45,13 +45,13 @@ ORDER BY color.name;';
 		$request = pg_query($db, $sql);
 
 		if ($request) {
-			$info = "<strong>" . $name . "</strong> was added to the palette list.";
+			$_SESSION['info'] = "<strong>" . $name . "</strong> was added to the palette list.";
 			$newUrl = removeParams(assembleCurrentUrl(), [ 'paletteName' ]);
 			header('Location: '.$newUrl);
 			exit();
 		}
 		else {
-			$error = cleanUpErrorMessage(pg_last_error($db));
+			$_SESSION['error'] = cleanUpErrorMessage(pg_last_error($db));
 		}
 
 	}

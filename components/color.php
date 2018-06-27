@@ -8,8 +8,23 @@
 		addColor($safeName, $safeHex);
 	}
 	elseif (isset($_POST['deleteColorId'])) {
-		$safeId = htmlentities($_POST['deleteColorId'], ENT_QUOTES);
-		deleteColor($safeId);
+
+		$safeColorId = htmlentities($_POST['deleteColorId'], ENT_QUOTES);
+
+		if (isset($_POST['deleteFromPaletteId'])) {
+
+			// Deleting a color in a palette (ie from color_palette table)
+			$safePaletteId = htmlentities($_POST['deleteFromPaletteId'], ENT_QUOTES);
+			deleteColorFromPalette($safeColorId, $safePaletteId);
+
+		}
+		else {
+
+			// Delete a color from the color table
+			deleteColor($safeColorId);
+
+		}
+
 	}
 
 	function colorForm() {
@@ -38,7 +53,7 @@
 	
 	}
 
-	function displayColor($id, $name, $hex, $showDeleteColor = true, $showDeleteFromPalette = false) {
+	function displayColor($id, $name, $hex, $showDeleteColor = true, $deleteFromPaletteId = 0) {
 
 		$output = '
 			<div class="card rounded-0">
@@ -69,6 +84,18 @@
 
 		}
 
+		if ($deleteFromPaletteId > 0) {
+
+				$output .= '<div class="col col-sm-auto text-right">
+						<form method="post" action="">
+							<button class="btn text-danger" type="submit"><i class="fas fa-trash-alt"></i></button>
+							<input type="hidden" name="deleteColorId" value="' . $id . '">
+							<input type="hidden" name="deleteFromPaletteId" value="' . $deleteFromPaletteId . '">
+						</form>
+					</div>';
+
+		}
+
 		$output .= '</div>
 			</div>';
 
@@ -86,9 +113,6 @@
 
 	function addColor($name, $hex) {
 
-		global $error;
-		global $info;
-
 		$sql = "INSERT INTO color (name, hex) VALUES ('" . $name . "', '" . $hex . "');";
 
 		$db = getDb(); // So that we can check pg_last_error later
@@ -96,13 +120,13 @@
 		$request = pg_query($db, $sql);
 
 		if ($request) {
-			$info = "<strong>" . $name . "</strong> was added to the color list.";
+			$_SESSION['info'] = "<strong>" . $name . "</strong> was added to the color list.";
 			$newUrl = removeParams(assembleCurrentUrl(), [ 'colorName', 'hexCode' ]);
 			header('Location: '.$newUrl);
 			exit();
 		}
 		else {
-			$error = cleanUpErrorMessage(pg_last_error($db));
+			$_SESSION['error'] = cleanUpErrorMessage(pg_last_error($db));
 		}
 
 	}
@@ -114,11 +138,15 @@
 
 	}
 
+	function getPaletteName($palette_id) {
+
+		$request = pg_query(getDb(), "SELECT name FROM palette WHERE id = " . $palette_id);
+		return pg_fetch_row($request)[0];
+
+	}
+
 
 	function deleteColor($color_id) {
-
-		global $error;
-		global $info;
 
 		$name = getColorName($color_id);
 
@@ -129,13 +157,35 @@
 		$request = pg_query($db, $sql);
 
 		if ($request) {
-			$info = "<strong>" . $name . "</strong> was removed from the color list.";
+			$_SESSION['info'] = "<strong>" . $name . "</strong> was removed from the color list.";
 			$newUrl = removeParams(assembleCurrentUrl(), []);
 			header('Location: '.$newUrl);
 			exit();
 		}
 		else {
-			$error = cleanUpErrorMessage(pg_last_error($db));
+			$_SESSION['error'] = cleanUpErrorMessage(pg_last_error($db));
+		}		
+
+	}
+
+	function deleteColorFromPalette($color_id, $palette_id) {
+
+		$name = getColorName($color_id);
+
+		$sql = "DELETE FROM color_palette WHERE color_id = " . $color_id . ' and palette_id = kjflsdkfls' . $palette_id;
+
+		$db = getDb(); // So that we can check pg_last_error later
+
+		$request = pg_query($db, $sql);
+
+		if ($request) {
+			$_SESSION['info'] = "<strong>" . $name . "</strong> was removed from the <strong> " . getPaletteName($palette_id) . "</strong> palette.";
+			$newUrl = removeParams(assembleCurrentUrl(), []);
+			header('Location: '.$newUrl);
+			exit();
+		}
+		else {
+			$_SESSION['error'] = cleanUpErrorMessage(pg_last_error($db));
 		}		
 
 	}

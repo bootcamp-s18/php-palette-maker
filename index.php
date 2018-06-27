@@ -1,9 +1,17 @@
 <?php 
 	ini_set("display_errors", 0);
-	$error = '';
-	$info = '';
+
+	session_start();
+
 	include('components/color.php');
 	include('components/palette.php'); 
+
+	$error = isset($_SESSION['error']) ? $_SESSION['error'] : '';
+	$info = isset($_SESSION['info']) ? $_SESSION['info'] : '';
+
+	$_SESSION['error'] = '';
+	$_SESSION['info'] = '';
+
 ?>
 <!doctype html>
 <html>
@@ -55,10 +63,11 @@
 <?php 
 
 	foreach (getPaletteColors($palette['id']) as $color) { 
-		echo displayColor($color['id'], $color['name'], $color['hex'], false, true); 
+		echo displayColor($color['id'], $color['name'], $color['hex'], false, $palette['id']); 
 	} 
 
 	echo getAddColorLinks($palette['id']);
+
 ?>
 
 
