@@ -1,4 +1,16 @@
-<form class="form-inline mt-5" method="get" action="">
+<?php 
+
+	require_once('utility.php');
+
+	if (isset($_GET['colorName']) && isset($_GET['hexCode'])) {
+		$safeName = htmlentities($_GET['colorName'], ENT_QUOTES);
+		$safeHex = htmlentities($_GET['hexCode'], ENT_QUOTES);
+		addColor($safeName, $safeHex);
+	}
+
+	function colorForm() {
+
+		return '<div><form class="form-inline mt-5" method="get" action="">
 	<label class="sr-only" for="colorName">Color Name</label>
 	<input type="text" class="rounded-0 form-control mb-2 mr-sm-2 mb-sm-0" id="colorName" name="colorName" placeholder="The deep dark void...">
 
@@ -11,16 +23,8 @@
 	</div>
 
 	<button type="submit" class="btn btn-secondary rounded-0">Add Color</button>
-</form>
+</form></div>';
 
-<?php 
-
-	require_once('database.php');
-
-	if (isset($_GET['colorName']) && isset($_GET['hexCode'])) {
-		$safeName = htmlentities($_GET['colorName'], ENT_QUOTES);
-		$safeHex = htmlentities($_GET['hexCode'], ENT_QUOTES);
-		addColor($safeName, $safeHex);
 	}
 
 	function getColors() {
@@ -58,6 +62,9 @@
 
 		if ($request) {
 			$info = "<strong>" . $name . "</strong> was added to the color list.";
+			$newUrl = removeParams(assembleCurrentUrl(), [ 'colorName', 'hexCode' ]);
+			header('Location: '.$newUrl);
+			exit();
 		}
 		else {
 			$error = "Could not add <strong>" . $name . "</strong> to the color list.";

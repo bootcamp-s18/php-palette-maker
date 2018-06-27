@@ -1,17 +1,20 @@
-<form class="form-inline mt-3" method="get" action="">
-	<label class="sr-only" for="paletteName">Palette Name</label>
-	<input type="text" class="rounded-0 form-control mb-2 mr-sm-2 mb-sm-0" id="paletteName" name="paletteName" placeholder="The most beautiful...">
-
-	<button type="submit" class="btn btn-secondary rounded-0">Add Palette</button>
-</form>
-
 <?php
 
-	require_once('database.php');
+	require_once('utility.php');
 
 	if (isset($_GET['paletteName'])) {
 		$safeName = htmlentities($_GET['paletteName'], ENT_QUOTES);
 		addPalette($safeName);
+	}
+
+	function paletteForm() {
+
+		return '<div><form class="form-inline mt-3" method="get" action="">
+	<label class="sr-only" for="paletteName">Palette Name</label>
+	<input type="text" class="rounded-0 form-control mb-2 mr-sm-2 mb-sm-0" id="paletteName" name="paletteName" placeholder="The most beautiful...">
+	<button type="submit" class="btn btn-secondary rounded-0">Add Palette</button>
+</form></div>';
+
 	}
 
 	function getPalettes() {
@@ -41,6 +44,9 @@ ORDER BY color.name;';
 
 		if ($request) {
 			$info = "<strong>" . $name . "</strong> was added to the palette list.";
+			$newUrl = removeParams(assembleCurrentUrl(), [ 'paletteName' ]);
+			header('Location: '.$newUrl);
+			exit();
 		}
 		else {
 			$error = "Could not add <strong>" . $name . "</strong> to the palette list.";

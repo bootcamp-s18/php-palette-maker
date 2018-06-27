@@ -1,3 +1,10 @@
+<?php 
+	ini_set("display_errors", 0);
+	$error = '';
+	$info = '';
+	include('components/color.php');
+	include('components/palette.php'); 
+?>
 <!doctype html>
 <html>
 <head>
@@ -6,21 +13,9 @@
 </head>
 <body class="container">
 
-	<?php 
-		ini_set("display_errors", 0);
-		$error = '';
-		$info = '';
-	?>
-
 	<p><a href="/">Clear params</a></p>
 
 	<h1 class="mt-3">PHP Palette Maker</h1>
-
-	<!-- New color form -->
-	<?php include('components/color.php'); ?>
-
-	<!-- New palette form -->
-	<?php include('components/palette.php'); ?>
 
 	<?php if ($info) { ?>
 	<div class="mt-3 alert alert-success rounded-0"><?=$info?></div>
@@ -29,6 +24,10 @@
 	<?php if ($error) { ?>
 	<div class="mt-3 alert alert-danger rounded-0"><?=$error?></div> 
 	<?php } ?>
+
+	<?php echo colorForm(); ?>
+
+	<?php echo paletteForm(); ?>
 
 	<div class="row mt-5">
 
