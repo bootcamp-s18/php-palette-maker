@@ -7,6 +7,10 @@
 		$safeHex = htmlentities($_GET['hexCode'], ENT_QUOTES);
 		addColor($safeName, $safeHex);
 	}
+	elseif (isset($_POST['deleteColorId'])) {
+		$safeId = htmlentities($_POST['deleteColorId'], ENT_QUOTES);
+		deleteColor($safeId);
+	}
 
 	function colorForm() {
 
@@ -34,20 +38,51 @@
 	
 	}
 
-	function displayColor($id, $name, $hex) {
+	function displayColor($id, $name, $hex, $showDeleteColor = true, $showDeleteFromPalette = false) {
 
-		return '
+		$output = '
 			<div class="card rounded-0">
 				<div class="card-header row" id="color' . $id . '" style="margin: 0 !important; padding: 0 !important; background-color: #FFFFFF;">
 					<div class="col m-auto"><strong>' . $name . '</strong> <span class="text-secondary">#' . $hex . '</span></div>
-					<div class="col m-auto" style="border: 1px solid #000; height: 30px; width: 60px; background-color: #' . $hex . ';"></div>
-					<div class="col col-sm-auto text-right">
-						<button class="btn">X</button>
-					</div>
-				</div>
+					<div class="col m-auto" style="border: 1px solid #000; height: 30px; width: 60px; background-color: #' . $hex . ';"></div>';
+		
+		if ($showDeleteColor) {
+
+			if (assignedPalettes($id) > 0) {
+
+				// The inactive version of the button
+				// Shouldn't delete a color if it is in any palettes
+				$output .= '<div class="col col-sm-auto text-right">
+						<button class="btn" disabled><i class="far fa-trash-alt"></i></button>
+					</div>';
+			}
+			else {
+
+				// Okay to delete this one
+				$output .= '<div class="col col-sm-auto text-right">
+						<form method="post" action="">
+							<button class="btn text-danger" type="submit"><i class="fas fa-trash-alt"></i></button>
+							<input type="hidden" name="deleteColorId" value="' . $id . '">
+						</form>
+					</div>';
+			}
+
+		}
+
+		$output .= '</div>
 			</div>';
 
+		return $output;
+
 	}
+
+	function assignedPalettes($color_id) {
+
+		$request = pg_query(getDb(), "SELECT count(*) FROM color_palette WHERE color_id = " . $color_id);
+		return pg_fetch_row($request)[0];
+
+	}
+
 
 	function addColor($name, $hex) {
 
@@ -72,9 +107,37 @@
 
 	}
 
+	function getColorName($color_id) {
+
+		$request = pg_query(getDb(), "SELECT name FROM color WHERE id = " . $color_id);
+		return pg_fetch_row($request)[0];
+
+	}
+
+
 	function deleteColor($color_id) {
 
-		
+		global $error;
+		global $info;
+
+		$name = getColorName($color_id);
+
+		$sql = "DELETE FROM color WHERE id = " . $color_id;
+
+		$db = getDb(); // So that we can check pg_last_error later
+
+		$request = pg_query($db, $sql);
+
+		if ($request) {
+			$info = "<strong>" . $name . "</strong> was removed from the color list.";
+			$newUrl = removeParams(assembleCurrentUrl(), []);
+			header('Location: '.$newUrl);
+			exit();
+		}
+		else {
+			$error = cleanUpErrorMessage(pg_last_error($db));
+		}		
+
 	}
 
 
