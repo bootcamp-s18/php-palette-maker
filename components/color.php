@@ -44,6 +44,7 @@
 					</h5>
 					<div class="col m-auto" style="border: 1px solid #000; height: 30px; width: 60px; background-color: #' . $hex . ';"></div>
 					<div class="col text-right">
+						#' . $hex . '
 						<button class="btn">X</button>
 					</div>
 				</div>
