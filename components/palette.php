@@ -10,6 +10,11 @@
 		$safePaletteId = htmlentities($_POST['deletePaletteId'], ENT_QUOTES);
 		deletePalette($safePaletteId);
 	}
+	elseif (isset($_GET['newColorForPalette']) && isset($_GET['paletteId'])) {
+		$safePaletteId = htmlentities($_GET['paletteId'], ENT_QUOTES);
+		$safeColorId = htmlentities($_GET['newColorForPalette'], ENT_QUOTES);
+		addColorToPalette($safeColorId, $safePaletteId);
+	}
 
 	function paletteForm() {
 
@@ -38,9 +43,6 @@ ORDER BY color.name;';
 	}
 
 	function addPalette($name) {
-
-		global $error;
-		global $info;
 
 		$sql = "INSERT INTO palette (name) VALUES ('" . $name . "');";
 
@@ -76,7 +78,7 @@ ORDER BY color.name;';
 
 		foreach (getUnlinkedColors($palette_id) as $unlinked) {
 
-    		$output .= '<a class="dropdown-item" href="#">' . $unlinked['name'] . '</a>';
+    		$output .= '<a class="dropdown-item" href="/?newColorForPalette=' . $unlinked['id'] . '&paletteId=' . $palette_id . '">' . $unlinked['name'] . '</a>';
 
     	}
 
@@ -109,7 +111,26 @@ ORDER BY name;';
 
 
 
-	function addColorToPalette($color_id) {
+	function addColorToPalette($color_id, $palette_id) {
+
+		$color_name = getColorName($color_id);
+		$palette_name = getPaletteName($palette_id);
+
+		$sql = "INSERT INTO color_palette (color_id, palette_id) VALUES ($color_id, $palette_id);";
+
+		$db = getDb(); // So we can check pg_last_error later
+
+		$request = pg_query($db, $sql);
+
+		if ($request) {
+			$_SESSION['info'] = "<strong>$color_name</strong> was added to <strong>$palette_name</strong>.";
+			$newUrl = removeParams(assembleCurrentUrl(), [ 'newColorForPalette', 'paletteId' ]);
+			header('Location: '.$newUrl);
+			exit();
+		}
+		else {
+			$_SESSION['error'] = cleanUpErrorMessage(pg_last_error($db));
+		}
 
 
 	}
