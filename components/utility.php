@@ -61,4 +61,20 @@
 
 	}
 
+	function cleanUpErrorMessage($uglyError) {
+
+		$niceError = "An error occurred. Try again?";
+
+		// Key (name)=
+		if (strpos($uglyError, 'Key (name)=')) {
+			$niceError = "That name already exists. Try another?";
+		}
+		elseif (strpos($uglyError, 'Key (hex)=')) {
+			$niceError = "That hex value is already used. Try another?";
+		}
+
+		return $niceError;
+
+	}
+
 ?>

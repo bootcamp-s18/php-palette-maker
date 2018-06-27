@@ -40,7 +40,9 @@ ORDER BY color.name;';
 
 		$sql = "INSERT INTO palette (name) VALUES ('" . $name . "');";
 
-		$request = pg_query(getDb(), $sql);
+		$db = getDb(); // So we can check pg_last_error later
+
+		$request = pg_query($db, $sql);
 
 		if ($request) {
 			$info = "<strong>" . $name . "</strong> was added to the palette list.";
@@ -49,7 +51,7 @@ ORDER BY color.name;';
 			exit();
 		}
 		else {
-			$error = "Could not add <strong>" . $name . "</strong> to the palette list.";
+			$error = cleanUpErrorMessage(pg_last_error($db));
 		}
 
 	}

@@ -59,7 +59,9 @@
 
 		$sql = "INSERT INTO color (name, hex) VALUES ('" . $name . "', '" . $hex . "');";
 
-		$request = pg_query(getDb(), $sql);
+		$db = getDb(); // So that we can check pg_last_error later
+
+		$request = pg_query($db, $sql);
 
 		if ($request) {
 			$info = "<strong>" . $name . "</strong> was added to the color list.";
@@ -68,7 +70,7 @@
 			exit();
 		}
 		else {
-			$error = "Could not add <strong>" . $name . "</strong> to the color list.";
+			$error = cleanUpErrorMessage(pg_last_error($db));
 		}
 
 	}
